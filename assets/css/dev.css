@@ -1,0 +1,52 @@
+/* ---------------------------SMALL IMAGES-------------------------  */
+
+.first .small-img {
+    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.first .small-img .small {
+    padding: 10px;
+    background-color: #33314d;
+    margin: 0 15px 15px 0;
+    border-radius: 10% 25%;
+}
+
+.first .small-img .small img {
+    width: 120px;
+    border-radius: 10% 25%;
+}
+
+.first figure figcaption {
+    text-align: center;
+    color: var(--violet);
+}
+
+.first figure:hover {
+    filter: brightness(130%);
+}
+
+/* ---------------------------Blocs-------------------------  */
+.titre-bloc{
+    /* height: 100%; */
+    text-align: center;
+    border-bottom: 1px solid white;
+    overflow: hidden;
+}
+.container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.texte-bloc{
+    width: 100%;
+    padding: 20px;
+    flex-shrink: 3;
+    border-right: 1px solid white;
+}
+.img-bloc{
+    width: 100%;
+    padding: 20px;
+}
