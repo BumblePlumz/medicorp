@@ -21,7 +21,7 @@ abstract class DAO
 
     abstract function create($objet);
 
-    function __construct($key, $table)
+    function __construct($table, $key)
     {
         $this->primaryKey = $key;
         $this->table = $table;

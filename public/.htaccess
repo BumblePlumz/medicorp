@@ -1,6 +1,9 @@
 # On démarre le moteur de réécriture
 RewriteEngine On
 
+# On redéfini la base du site
+# RewriteBase /nicolas/E5/medicorp/live/
+
 # On réécrit l'URL
 RewriteRule ^([a-zA-Z0-9\-\_\/]*)$ index.php?p=$1
 

@@ -28,4 +28,7 @@ abstract class Controller
         // Template de la page il s'agit du fichier contenant le menu, le footer, etc... par défaut.
         require_once ROOT.'/Views/'.$template.'.php';
     }
+
+    // TODO Sécurité
+
 }

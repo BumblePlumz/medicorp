@@ -1,24 +1,12 @@
 <?php
 use App\Core\GlobalFunctions;
 
-if (){
-    // Si on est en dev
-    define('APP_ROOT', "/");
-} else {
-    // Si on est en prod
-    define('APP_ROOT', "/nicolas/E5/medicorp/live/public");
-}
-
 // Pour afficher les erreurs si le serveur est mal configuré /etc/php/phpXX/apache2/php.ini
 // error_reporting(E_ALL);
 // ini_set("display_errors", 1);
 
-
-
-
 GlobalFunctions::my_print_r($_SESSION);
-// echo __DIR__;
-echo APP_ROOT."/assets/css/View/default/default.css";
+
 
 
 ?>
@@ -34,12 +22,12 @@ echo APP_ROOT."/assets/css/View/default/default.css";
 
     <!-- Styles de base sur toutes les pages | Décommenter debug.css pour débugger le CSS -->
     <!-- <link rel="stylesheet" href="/assets/css/View/default/debug.css">  -->
-    <link rel="stylesheet" href="<?= APP_ROOT."/assets/css/View/default/default.css"?>">
+    <link rel="stylesheet" href="/assets/css/View/default/default.css">
 
     <!-- Library CSS -->
-    <link rel="stylesheet" href="<?= APP_ROOT."/assets/css/bootstrap/bootstrap.min.css"?>">
-    <link rel="stylesheet" href="<?= APP_ROOT."/assets/css/fontawesome/all.min.css"?>">
-    <link rel="stylesheet" href="<?= APP_ROOT."/assets/css/fontawesome/fontawesome.min.css"?>">
+    <link rel="stylesheet" href="/assets/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/fontawesome/all.min.css">
+    <link rel="stylesheet" href="/assets/css/fontawesome/fontawesome.min.css">
 
     <!-- Feuilles de style personnalisées par page -->
     <?php

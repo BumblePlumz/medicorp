@@ -42,7 +42,7 @@ class PatientController extends Controller
      * Sinon on affiche la vue avec le formulaire
      * @return void
      */
-    public function register_patient()
+    public function enregistrer_patient()
     {
         // Si il existe une requête de type POST, on la traite
         if (isset($_POST["action"]) && !empty($_POST["action"])) {
@@ -53,7 +53,6 @@ class PatientController extends Controller
                     if ($this->response["success"] = $this->createPatient()) {
                         $this->response["message"] = "l'utilisateur a été créer avec succès";
                     }
-                    // header('Content-type: application/json');
                     echo json_encode($this->response);
                     break;
             }
@@ -65,35 +64,51 @@ class PatientController extends Controller
 
         $form->debutForm("post", "#", ["id" => "form-patient"])
 
+            ->debutDiv(['class' => 'col-6'])
             ->ajoutLabelFor('nom', 'Nom :', ['class' => 'form-label'])
             ->ajoutInput('text', 'nom', ['id' => 'nom', 'class' => 'form-control'])
+            ->finDiv()
 
+            ->debutDiv(['class' => 'col-6'])
             ->ajoutLabelFor('prenom', 'Prénom :', ['class' => 'form-label'])
             ->ajoutInput('text', 'prenom', ['id' => 'prenom', 'class' => 'form-control'])
+            ->finDiv()
 
+            ->debutDiv(['class' => 'col-6'])
             ->ajoutLabelFor('date-de-naissance', 'Date de naissance :', ['class' => 'form-label'])
             ->ajoutInput('date', 'date-de-naissance', ['id' => 'date-de-naissance', 'class' => 'form-control'])
+            ->finDiv()
 
+            ->debutDiv(['class' => 'col-6'])
             ->ajoutLabelFor('adresse', 'Adresse :', ['class' => 'form-label'])
             ->ajoutInput('text', 'adresse', ['id' => 'adresse', 'class' => 'form-control'])
+            ->finDiv()
 
+            ->debutDiv(['class' => 'col-6'])
             ->ajoutLabelFor('ville', 'Ville :', ['class' => 'form-label'])
             ->ajoutInput('text', 'ville', ['id' => 'ville', 'class' => 'form-control'])
+            ->finDiv()
 
+            ->debutDiv(['class' => 'col-6'])
             ->ajoutLabelFor('cp', 'Code Postal :', ['class' => 'form-label'])
             ->ajoutInput('text', 'cp', ['id' => 'cp', 'class' => 'form-control'])
+            ->finDiv()
 
+            ->debutDiv(['class' => 'col-6'])
             ->ajoutLabelFor('email', 'E-mail :', ['class' => 'form-label'])
             ->ajoutInput('email', 'email', ['id' => 'email', 'class' => 'form-control'])
+            ->finDiv()
 
+            ->debutDiv(['class' => 'col-6'])
             ->ajoutLabelFor('telephone', 'Téléphone :', ['class' => 'form-label'])
             ->ajoutInput('number', 'telephone', ['id' => 'telephone', 'class' => 'form-control'])
+            ->finDiv()
 
             ->ajoutBouton('Inscrire un patient', ['class' => 'btn btn-primary', "type" => "submit"])
 
             ->finForm();
 
-        $this->render("patient/register_patient", ['registerForm' => $form->create()]);
+        $this->render("patient/enregistrer_patient", ['registerForm' => $form->create()]);
     }
 
 
@@ -104,27 +119,26 @@ class PatientController extends Controller
     /********************************************/
     private function loadPatients()
     {
-        $userDAO = UserDAO::getInstance();
-        $patientDAO = PatientDAO::getInstance();
+        $praticienDAO = PraticienDAO::getInstance();
 
         $userList = $patientDAO->findAllByPraticien($_SESSION["user"]["idPraticien"]);
         foreach($userList as $idPatient){
-            $userDO = $userDAO->read($idPatient);
-            $userArray = array(
-                "id" => $userDO->getIdUser(),
-                "nom" => $userDO->getNom(),
-                "prenom" => $userDO->getPrenom(),
-                "date_naissance" => $userDO->getDateNaissance(),
-                "adresse" => $userDO->getAdresse(),
-                "ville" => $userDO->getVille(),
-                "code_postal" => $userDO->getCodePostal(),
-                "email" => $userDO->getEmail(),
-                "telephone" => $userDO->getTelephone(),
-                "mot_de_passe" => $userDO->getMotDePasse(),
-                "actif" => $userDO->getActif(),
-                "created_at" => $userDO->getCreated_at(),
+            $patientDO = $patientDAO->read($idPatient);
+            $patientArray = array(
+                "id" => $patientDO->getIdpatient(),
+                "nom" => $patientDO->getNom(),
+                "prenom" => $patientDO->getPrenom(),
+                "date_naissance" => $patientDO->getDateNaissance(),
+                "adresse" => $patientDO->getAdresse(),
+                "ville" => $patientDO->getVille(),
+                "code_postal" => $patientDO->getCodePostal(),
+                "email" => $patientDO->getEmail(),
+                "telephone" => $patientDO->getTelephone(),
+                "mot_de_passe" => $patientDO->getMotDePasse(),
+                "actif" => $patientDO->getActif(),
+                "created_at" => $patientDO->getCreated_at(),
             );
-            $this->response["data"][] = $userArray;
+            $this->response["data"][] = $patientArray;
         }
 
     }
@@ -148,9 +162,8 @@ class PatientController extends Controller
 
             // On transforme l'input "date" en timestamp
             $dateDeNaissance = strip_tags($_POST['date-de-naissance']);
-            $dateDeNaissance = strtotime($dateDeNaissance);
-            $dateDeNaissancePrepared = new DateTime();
-            $dateDeNaissancePrepared->setTimestamp($dateDeNaissance);
+            $date_format = "Y-m-d";
+            $dateDeNaissancePrepared = DateTime::createFromFormat($date_format, $dateDeNaissance);
 
             // On génère le mot de passe
             $password = uniqid();

@@ -3,19 +3,31 @@ namespace App\Models;
 
 use App\Core\DataAccessObject;
 
-use PDO;
-use Exception;
+use DateTime;
 
 class PatientDAO extends DAO 
 {
+    private string $id = "id_patient";
+    private string $nom = "nom";
+    private string $prenom = "prenom";
+    private string $dateNaissance = "date_naissance";
+    private string $adresse = "adresse";
+    private string $ville = "ville";
+    private string $codePostal = "code_postal";
+    private string $email = "email";
+    private string $telephone = "telephone";
+    private string $motDePasse = "mot_de_passe";
+    private string $actif = "actif";
+    private string $createdAt = "date_creation";
+
     // Instance
     protected static $instance = null;
 
     public function __construct()
     {
-        parent::__construct(["id_user, id_praticien"], "patients");
+        parent::__construct("patient", 'id_patient');
     }
-    
+
     public static function getInstance():self
     {
         if (self::$instance === null){
@@ -23,75 +35,175 @@ class PatientDAO extends DAO
         }
         return self::$instance;
     }
-    
     /**
-     * Cherche dans la table d'association praticien/patient tous les patients d'un praticien
-     * @param [int] $id
-     * @return array
+     * Créer la session de l'utilisateur
+     * @return void
      */
-    public function findAllByPraticien($id):array
-    {
-        $data = [];
-        // On utilise le prepared statemet qui simplifie les typages
-        $sql = "SELECT * FROM $this->table WHERE id_praticien=:id";
-
-        // On récupère l'instance unique DAO et on prépare la requête
-        $stmt = DataAccessObject::getInstance()->prepare($sql);
-
-        // On associe les paramètres
-        $stmt->bindParam(':id', $id);
-
-        // On exécute la requête préparée
-        $stmt->execute();
-
-        $rows = $stmt->fetchAll();
-        foreach ($rows as $row) {
-            $data[] = $row["id_user"];
-        }
-        return $data;
+    public function setSession($patientDO){
+        $_SESSION['patient'] = [
+            'id' => $patientDO->getIdUser(),
+            'email' => $patientDO->getEmail(),
+        ];
     }
-    public function findAllByUser($id){
-        // On utilise le prepared statemet qui simplifie les typages
-        $sql = "SELECT * FROM $this->table WHERE id_user=:id";
 
-        // On récupère l'instance unique DAO et on prépare la requête
+    public function findOneByEmail(string $email){
+        $sql = "SELECT * FROM $this->table WHERE email = :email";
+        
         $stmt = DataAccessObject::getInstance()->prepare($sql);
-
-        // On associe les paramètres
-        $stmt->bindParam(':id', $id);
-
-        // On exécute la requête préparée
+        $stmt->bindParam(":email",$email);
         $stmt->execute();
 
         $row = $stmt->fetch();
+        $id = $row[$this->id];
+        $nom = $row[$this->nom];
+        $prenom = $row[$this->prenom];
+        $date_naissance = DateTime::createFromFormat('Y-m-d', $row[$this->dateNaissance]);
+        $adresse = $row[$this->adresse];
+        $city = $row[$this->ville];
+        $cp = $row[$this->codePostal];
+        $email = $row[$this->email];
+        $phone = $row[$this->telephone];
+        $password = $row[$this->motDePasse];
+        $actif = $row[$this->actif];
+        $createdAt = DateTime::createFromFormat('Y-m-d H:i:s', $row[$this->createdAt]);
+
+        $patientDO = new PatientDO($nom, $prenom, $date_naissance, $adresse, $city, $cp, $email, $phone, $password);
+        $patientDO->setIdPatient($id)
+            ->setActif($actif)
+            ->setDateCreation($createdAt);
+
+        return $patientDO;
     }
 
-    public function create($objet):void
+    /**
+     * Lire un tuple "users" de la base donnée
+     * @param [int] $id
+     * @return PatientDO
+     */
+    public function read($id):PatientDO
     {
         // On utilise le prepared statemet qui simplifie les typages
-        $sql = "INSERT INTO $this->table (id_user, id_praticien) VALUE (:id_user, :id_praticien)";
+        $sql = "SELECT * FROM $this->table WHERE $this->primaryKey=:id";
 
         // On récupère l'instance unique DAO et on prépare la requête
         $stmt = DataAccessObject::getInstance()->prepare($sql);
 
-        $idUser = $objet->getIdUser();
-        $idPraticien = $objet->getIdPraticien();
-
         // On associe les paramètres
-        $stmt->bindParam(":id_user", $idUser);
-        $stmt->bindParam(":id_praticien", $idPraticien);
+        $stmt->bindParam(':id', $id);
 
         // On exécute la requête préparée
         $stmt->execute();
+
+        // On récupère 
+        $row = $stmt->fetch();
+        $nom = $row["nom"];
+        $prenom = $row[$this->prenom];
+        $date_naissance = DateTime::createFromFormat('Y-m-d', $row[$this->dateNaissance]);
+        $adresse = $row[$this->adresse];
+        $city = $row[$this->ville];
+        $cp = $row[$this->codePostal];
+        $email = $row[$this->email];
+        $phone = $row[$this->telephone];
+        $password = $row[$this->motDePasse];
+        $actif = $row[$this->actif];
+        $createdAt = DateTime::createFromFormat('Y-m-d H:i:s', $row[$this->createdAt]);
+
+        $patientDO = new PatientDO($nom, $prenom, $date_naissance, $adresse, $city, $cp, $email, $phone, $password);
+        $patientDO->setIdPatient($id)
+            ->setActif($actif)
+            ->setDateCreation($createdAt);
+
+        return $patientDO;
     }
 
-    public function read($id){
-        throw new Exception("Can't touch this !");
+    /**
+     * Mettre à jour un tuple "users" dans la base de donnée
+     * @param [UserDO] $objet
+     * @return void
+     */
+    public function update($objet):void
+    {
+        // On utilise le prepared statemet qui simplifie les typages
+        $sql = "UPDATE $this->table SET nom = :nom, prenom = :prenom, date_naissance = :date_naissance, adresse = :adresse, ville = :ville, code_postal = :code_postal, email = :email, telephone = :telephone, mot_de_passe = :mot_de_passe, actif = :actif WHERE $this->primaryKey=:id";
+        $stmt = DataAccessObject::getInstance()->prepare($sql);
+
+        $nom = $objet->getNom();
+        $prenom = $objet->getPrenom();
+        $date_naissance = $objet->getDateNaissance()->format('Y-m-d');
+        $adresse = $objet->getAdresse();
+        $ville = $objet->getVille();
+        $cp = $objet->getCodePostal();
+        $email = $objet->getEmail();
+        $phone = $objet->getTelephone();
+        $password = $objet->getMotDePasse();
+        $actif = $objet->getActif();
+        $id = $objet->getIdPatient();
+
+        $stmt->bindParam(':nom', $nom);
+        $stmt->bindParam(':prenom', $prenom);
+        $stmt->bindParam(':date_naissance', $date_naissance);
+        $stmt->bindParam(':adresse', $adresse);
+        $stmt->bindParam(':ville', $ville);
+        $stmt->bindParam(':code_postal', $cp);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':telephone', $phone);
+        $stmt->bindParam(':mot_de_passe', $password);
+        $stmt->bindParam(':actif', $actif);
+        $stmt->bindParam(':id', $id);
+
+        $stmt->execute();
     }
-    public function delete($objet){
-        throw new Exception("Can't touch this !");
+
+    /**
+     * Créer un tuple "users" dans la base de donnée
+     * @param [UserDo] $objet
+     * @return void
+     */
+    public function create($objet):void
+    {
+        // On utilise le prepared statemet qui simplifie les typages
+        $sql = "INSERT INTO $this->table (nom, prenom, date_naissance, adresse, ville, code_postal, email, telephone, mot_de_passe) VALUE (:nom, :prenom, :date_naissance, :adresse, :ville, :code_postal, :email, :telephone, :mot_de_passe)";
+        $stmt = DataAccessObject::getInstance()->prepare($sql);
+
+        $nom = $objet->getNom();
+        $prenom = $objet->getPrenom();
+        $date_naissance = $objet->getDateNaissance()->format('Y-m-d');
+        $adresse = $objet->getAdresse();
+        $ville = $objet->getVille();
+        $cp = $objet->getCodePostal();
+        $email = $objet->getEmail();
+        $phone = $objet->getTelephone();
+        $password = $objet->getMotDePasse();
+
+        $stmt->bindParam(':nom', $nom);
+        $stmt->bindParam(':prenom', $prenom);
+        $stmt->bindParam(':date_naissance', $date_naissance);
+        $stmt->bindParam(':adresse', $adresse);
+        $stmt->bindParam(':ville', $ville);
+        $stmt->bindParam(':code_postal', $cp);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':telephone', $phone);
+        $stmt->bindParam(':mot_de_passe', $password);
+
+        $stmt->execute();
     }
-    public function update($objet){
-        throw new Exception("Can't touch this !");
+
+    /**
+     * Supprimer un tuple "users" dans la base de donnée
+     * @param [UserDo] $objet
+     * @return void
+     */
+    public function delete($objet):void
+    {
+        $sql = "DELETE FROM $this->table WHERE $this->primaryKey=:id";
+
+        $stmt = DataAccessObject::getInstance()->prepare($sql);
+
+        $id = $objet->getIdPatient();
+        $stmt->bindParam(':id', $id);
+
+        $stmt->execute();
     }
+
+
 }

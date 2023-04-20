@@ -52,9 +52,9 @@ class Router
             // On met une majuscule en 1ère lettre, on ajouter le namespace complet avant et on ajoute "Controller" après
             $controller = '\\App\\Controllers\\' . ucfirst(array_shift($configs)) . 'Controller';
 
-            /** Pour tester, on renvoie l'url dans un print_r et on voit bien que l'url utilisé appelle le controler du même nom :
-            * print_r($controller);die;
-            */
+            // Pour tester, on renvoie l'url dans un print_r et on voit bien que l'url utilisé appelle le controler du même nom :
+            // print_r($controller);die;
+            
 
             // On instancie le contrôleur
             $controller = new $controller();
