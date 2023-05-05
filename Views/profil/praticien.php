@@ -1,14 +1,14 @@
 <?php
 
-use App\Core\GlobalFunctions;
+use App\Core\AppFonctions;
 
-GlobalFunctions::addScript("/View/profil/praticien", "defer");
+AppFonctions::addScript("/View/profil/praticien", "defer");
 
 ?>
 
 <section class="container text-center">
-    <div class="header">
-        <h2>Profil Praticien</h2>
+    <div class="header mt-4 mb-4">
+        <p class="h2 text-primary">Profil Praticien</p>
     </div>
     <div class="row justify-content-center">
         <div class="col-12">
@@ -17,20 +17,20 @@ GlobalFunctions::addScript("/View/profil/praticien", "defer");
         <div class="col-12 col-xl-6 row mt-5">
             <h3>Information Utilisateur</h3>
             <div class="col-6">
-                <p id="nom" class="border rounded shadow bg-light"><u>Nom :</u></p>
+                <p id="nom" class=""><u>Nom :</u></p>
             </div>
             <div class="col-6">
-                <p id="prenom" class="border rounded shadow bg-light"><u>Prénom :</u></p>
+                <p id="prenom" class=""><u>Prénom :</u></p>
             </div>
             <div class="col-6">
-                <p id="dateN" class="border rounded shadow bg-light"><u>Date de naissance :</u></p>
-                <p id="email" class="border rounded shadow bg-light"><u>Email :</u></p>
-                <p id="tel" class="border rounded shadow bg-light"><u>Téléphone :</u></p>
+                <p id="dateN" class=""><u>Date de naissance :</u></p>
+                <p id="email" class=""><u>Email :</u></p>
+                <p id="tel" class=""><u>Téléphone :</u></p>
             </div>
             <div class="col-6">
-                <p id="adr" class="border rounded shadow bg-light"><u>Adresse :</u></p>
-                <p id="ville" class="border rounded shadow bg-light"><u>Ville :</u></p>
-                <p id="cp" class="border rounded shadow bg-light"><u>Code postal :</u></p>
+                <p id="adr" class=""><u>Adresse :</u></p>
+                <p id="ville" class=""><u>Ville :</u></p>
+                <p id="cp" class=""><u>Code postal :</u></p>
             </div>
         </div>
         <div class="col-12 col-xl-6 row mt-5">

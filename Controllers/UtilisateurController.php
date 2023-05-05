@@ -4,7 +4,7 @@ namespace App\Controllers;
 use App\Models\PraticienDAO;
 use App\Models\PraticienDO;
 
-use App\Core\GlobalFunctions;
+use App\Core\AppFonctions;
 use App\Core\Form;
 use DateTime;
 
@@ -65,40 +65,60 @@ class UtilisateurController extends Controller
         $form = new Form;
 
         $form->debutForm()
+            ->debutDiv(['class' => 'row'])
+            ->debutDiv(['class' => 'col-md-6'])
             ->ajoutLabelFor('nom', 'Nom :', ['class' => 'form-label'])
             ->ajoutInput('text', 'nom', ['id' => 'nom', 'class' => 'form-control'])
-
+            ->finDiv()
+            ->debutDiv(['class' => 'col-md-6'])
             ->ajoutLabelFor('prenom', 'Prénom :', ['class' => 'form-label'])
             ->ajoutInput('text', 'prenom', ['id' => 'prenom', 'class' => 'form-control'])
-
-            ->ajoutLabelFor('ville', 'Ville :', ['class' => 'form-label'])
-            ->ajoutInput('text', 'ville', ['id' => 'ville', 'class' => 'form-control'])
-
-            ->ajoutLabelFor('date-de-naissance', 'Date de naissance :', ['class' => 'form-label'])
-            ->ajoutInput('date', 'date-de-naissance', ['id' => 'date-de-naissance', 'class' => 'form-control'])
+            ->finDiv()
+            ->finDiv()
 
             ->ajoutLabelFor('adresse', 'Adresse :', ['class' => 'form-label'])
             ->ajoutInput('text', 'adresse', ['id' => 'adresse', 'class' => 'form-control'])
 
+            ->debutDiv(['class' => 'row'])
+            ->debutDiv(['class' => 'col-md-6'])
+            ->ajoutLabelFor('ville', 'Ville :', ['class' => 'form-label'])
+            ->ajoutInput('text', 'ville', ['id' => 'ville', 'class' => 'form-control'])
+            ->finDiv()
+            ->debutDiv(['class' => 'col-md-6'])
             ->ajoutLabelFor('cp', 'Code Postal :', ['class' => 'form-label'])
             ->ajoutInput('text', 'cp', ['id' => 'cp', 'class' => 'form-control'])
+            ->finDiv()
+            ->finDiv()
+
+            ->debutDiv(['class' => 'row'])
+            ->debutDiv(['class' => 'col-md-6'])
+            ->ajoutLabelFor('date-de-naissance', 'Date de naissance :', ['class' => 'form-label'])
+            ->ajoutInput('date', 'date-de-naissance', ['id' => 'date-de-naissance', 'class' => 'form-control'])
+            ->finDiv()
+            ->debutDiv(['class' => 'col-md-6'])
+            ->ajoutLabelFor('telephone', 'Téléphone :', ['class' => 'form-label'])
+            ->ajoutInput('number', 'telephone', ['id' => 'telephone', 'class' => 'form-control'])
+            ->finDiv()
+            ->finDiv()
+
+            ->debutDiv(['class' => 'row'])
+            ->debutDiv(['class' => 'col-md-6'])
+            ->ajoutLabelFor('activite', 'Activitée :', ['class' => 'form-label'])
+            ->ajoutInput('text', 'activite', ['id' => 'activite', 'class' => 'form-control'])
+            ->finDiv()
+            ->debutDiv(['class' => 'col-md-6'])
+            ->ajoutLabelFor('numero_adeli', 'Numéro adeli :', ['class' => 'form-label'])
+            ->ajoutInput('text', 'numero_adeli', ['id' => 'numero_adeli', 'class' => 'form-control'])
+            ->finDiv()
+            ->finDiv()
 
             ->ajoutLabelFor('email', 'E-mail :', ['class' => 'form-label'])
             ->ajoutInput('email', 'email', ['id' => 'email', 'class' => 'form-control'])
 
-            ->ajoutLabelFor('telephone', 'Téléphone :', ['class' => 'form-label'])
-            ->ajoutInput('number', 'telephone', ['id' => 'telephone', 'class' => 'form-control'])
-
             ->ajoutLabelFor('pass', 'Mot de passe :', ['class' => 'form-label'])
             ->ajoutInput('password', 'password', ['id' => 'password', 'class' => 'form-control'])
 
-            ->ajoutLabelFor('activite', 'Activitée :', ['class' => 'form-label'])
-            ->ajoutInput('text', 'activite', ['id' => 'activite', 'class' => 'form-control'])
-
-            ->ajoutLabelFor('numero_adeli', 'Numéro adeli :', ['class' => 'form-label'])
-            ->ajoutInput('text', 'numero_adeli', ['id' => 'numero_adeli', 'class' => 'form-control'])
-
-            ->ajoutBouton('M\'inscrire', ['class' => 'btn btn-primary'])
+            ->ajoutBouton('M\'inscrire', ['class' => 'btn btn-primary d-block mx-auto mt-4'])
             ->finForm();
 
         $this->render('utilisateur/inscription_praticien', ['registerForm' => $form->create()]);
@@ -109,8 +129,6 @@ class UtilisateurController extends Controller
         if(Form::validate($_POST, ['email', 'password'])){
             $praticienDAO = new PraticienDAO();
             $praticienDO = $praticienDAO->findOneByEmail(strip_tags($_POST['email']));
-
-            GlobalFunctions::my_print_r($praticienDO);
             
             if (isset($praticienDO) && empty($praticienDO) || !password_verify($_POST['password'], $praticienDO->getMotDePasse()) ){
                 // Variable de session
@@ -131,12 +149,12 @@ class UtilisateurController extends Controller
         $form = new Form;
 
         // On ajoute chacune des parties qui nous intéressent
-        $form->debutForm()
+        $form->debutForm("post", "#", ['class' => 'col-6 col-md-4'])
             ->ajoutLabelFor('email', 'Email', ['class' => 'form-label'])
             ->ajoutInput('email', 'email', ['id' => 'email', 'class' => 'form-control'])
             ->ajoutLabelFor('password', 'Mot de passe', ['class' => 'form-label'])
             ->ajoutInput('password', 'password', ['id' => 'password', 'class' => 'form-control'])
-            ->ajoutBouton('Me connecter', ['class' => 'btn btn-primary'])
+            ->ajoutBouton('Me connecter', ['class' => 'btn btn-primary d-block mx-auto mt-4'])
             ->finForm()
         ;
 

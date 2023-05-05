@@ -7,18 +7,10 @@
 </div>
 <?php endif; ?>
 
-<h1>Connexion</h1>
-<?= $loginForm ?>
 
-
-
-
-<?php
-echo 
-?>
-
-<html>
-    <main id="content" class="container content">
-        <?= $contenu; ?>
-    </main>
-</html>
+<section class="mt-4 mb-4">
+    <p class="h1 text-center mb-3 text-primary">Connexion</p>
+    <div class="d-flex justify-content-center align-items-center">
+        <?= $loginForm ?>
+    </div>
+</section>

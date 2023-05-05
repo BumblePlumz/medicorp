@@ -1,7 +1,7 @@
 <?php
 namespace App\Core;
 
-class GlobalFunctions 
+class AppFonctions 
 {
     /**
      * Liste des feuilles de style à ajouter au head
